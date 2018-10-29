@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.ITeacherDao">
+
+	<resultMap type="com.bean.Teacher" id="baseTeacherResultMap">
+		<result property="id" column="pk_teacher_id" />
+		<result property="name" column="teacher_name" />
+	</resultMap>
+
+	<resultMap type="com.bean.Teacher"  extends="baseTeacherResultMap" id="teacherAndStuResultMap">
+		<collection property="students" resultMap="com.dao.IStudentDao.baseStuResultMap"></collection>
+	</resultMap>
+
+	<select id="findTeacherById" resultMap="teacherAndStuResultMap">
+		SELECT * FROM t_teacher t 
+		LEFT JOIN t_student_teacher st ON st.pk_teacher_id = t.pk_teacher_id
+		LEFT JOIN t_student s ON s.pk_student_id = st.pk_student_id
+		WHERE t.pk_teacher_id = #{arg0}
+	</select>
+	
+	<select id="findAllTeachers" resultMap="teacherAndStuResultMap">
+		SELECT * FROM t_teacher t 
+		LEFT JOIN t_student_teacher st ON st.pk_teacher_id = t.pk_teacher_id
+		LEFT JOIN t_student s ON s.pk_student_id = st.pk_student_id
+		WHERE 1 = 1
+		ORDER BY t.teacher_name ASC
+	</select>
+	
+	<select id="findExcludeTeachersByStuId" resultMap="teacherAndStuResultMap">
+		SELECT * FROM t_teacher t WHERE t.pk_teacher_id NOT IN ( 
+			SELECT st.pk_teacher_id FROM t_student_teacher st WHERE st.pk_student_id = #{arg0}
+		 ) 
+	</select>
+    
+</mapper>

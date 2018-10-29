@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.IStudentDao">
+
+	<cache eviction="FIFO" flushInterval="60000" size="512" readOnly="true" />
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache" /> -->
+
+	<resultMap type="com.bean.Student" id="baseStuResultMap">
+		<result property="id" column="pk_student_id" />
+		<result property="name" column="student_name" />
+		<result property="age" column="age" />
+		<result property="gender" column="gender" />
+		<result property="createTime" column="create_time" />
+		<result property="lastModifyTime" column="last_modify_time" />
+	</resultMap>
+
+	<resultMap type="com.bean.Student" extends="baseStuResultMap"
+		id="stuAllFieldsResultMap">
+		<association property="studentIdCard"
+			resultMap="com.dao.IStudentIdCardDao.baseIdcardResultMap"></association>
+		<association property="myClass"
+			resultMap="com.dao.IMyClassDao.baseMyClassResultMap"></association>
+		<collection property="teachers"
+			resultMap="com.dao.ITeacherDao.baseTeacherResultMap"></collection>
+	</resultMap>
+
+
+	<select id="findStudentByPage" resultMap="stuAllFieldsResultMap">
+		SELECT * FROM t_student s
+		LEFT JOIN t_student_idcard c ON s.fk_id_card = c.pk_student_idcard_id
+		LEFT JOIN t_class cl ON cl.pk_class_id = s.fk_class_id
+		WHERE 1 = 1
+
+		<if test="name != null and name.length > 0">
+			and s.student_name like '%' #{name} '%'
+		</if>
+
+		<if test="age != null">
+			and s.age = #{age}
+		</if>
+
+		<if test="gender != null">
+			and s.gender = #{gender}
+		</if>
+
+		<if test="myClass != null and myClass.name !=null and  myClass.name.length > 0">
+			and cl.class_name like '%' #{myClass.name} '%'
+		</if>
+		
+		<if test="studentIdCard != null and studentIdCard.num !=null and  studentIdCard.num.length > 0">
+			and c.student_num like '%' #{studentIdCard.num} '%'
+		</if>
+
+		ORDER BY s.create_time DESC
+		<!-- LIMIT #{arg0.offset} , #{arg0.pageSize} -->
+	</select>
+
+	<!-- <select id="findTotalCount" resultType="long"> -->
+	<!-- SELECT COUNT(s.pk_student_id) FROM t_student s WHERE 1 = 1 -->
+	<!-- </select> -->
+
+	<select id="findeStudentById" resultMap="stuAllFieldsResultMap" >
+		SELECT * FROM t_student s
+		LEFT JOIN t_student_idcard c ON s.fk_id_card = c.pk_student_idcard_id
+		LEFT JOIN t_class cl ON cl.pk_class_id = s.fk_class_id
+		LEFT JOIN t_student_teacher st ON st.pk_student_id = s.pk_student_id
+		LEFT JOIN t_teacher t ON st.pk_teacher_id = t.pk_teacher_id
+		where s.pk_student_id = #{arg0}
+	</select>
+
+	<insert id="addStudent">
+		INSERT INTO t_student
+		(
+		pk_student_id,age,create_time,gender,last_modify_time,student_name,fk_class_id
+		)
+		VALUES
+		( #{id} , #{age} , #{createTime} , #{gender} , #{lastModifyTime
+		}, #{name} , #{myClass.id} )
+	</insert>
+
+	<update id="updateStudent">
+		UPDATE t_student s SET
+		age = #{age},
+		last_modify_time =
+		#{lastModifyTime},
+		student_name = #{name},
+		fk_class_id = #{myClass.id},
+		fk_id_card = #{studentIdCard.id}
+		WHERE s.pk_student_id = #{id}
+	</update>
+
+	<delete id="deleteStudent">
+		DELETE s FROM t_student s where s.pk_student_id =
+		#{id}
+	</delete>
+
+	<delete id="batchDeleteStudenst">
+		DELETE s FROM t_student s where s.pk_student_id in
+
+		<foreach collection="array" index="i" item="stuId" open="("
+			separator="," close=")">
+			#{stuId}
+		</foreach>
+
+
+	</delete>
+
+</mapper>

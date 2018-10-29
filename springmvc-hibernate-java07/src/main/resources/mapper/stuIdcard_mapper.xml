@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.IStudentIdCardDao">
+
+	<resultMap type="com.bean.StudentIdCard" id="baseIdcardResultMap">
+		<result property="id" column="pk_student_idcard_id" />
+		<result property="num" column="student_num" />
+	</resultMap>
+
+	<resultMap type="com.bean.StudentIdCard" id="IdcardAndStuResultMap">
+		<association property="student" resultMap="com.dao.IStudentDao.baseStuResultMap"></association>
+	</resultMap>
+
+	<select id="findStuIdCardById" resultMap="IdcardAndStuResultMap">
+		SELECT * FROM t_student_idcard c 
+		where c.pk_student_idcard_id = #{arg0}
+	</select>
+
+	<select id="findStuIdCardByStuId" resultMap="IdcardAndStuResultMap">
+		SELECT * FROM t_student_idcard c 
+		LEFT JOIN t_student s ON  c.pk_student_idcard_id = s.fk_id_card  
+		WHERE s.pk_student_id = #{arg0}
+	</select>
+
+	<insert id="addStudentIdCard">
+		INSERT INTO t_student_idcard 
+		( pk_student_idcard_id , student_num )
+		value
+		( #{id} , #{num} );
+	</insert>
+
+	<delete id="deleteStudentIdCard">
+		DELETE c FROM t_student_idcard c
+		WHERE c.pk_student_idcard_id = #{id}
+	</delete>
+
+
+</mapper>

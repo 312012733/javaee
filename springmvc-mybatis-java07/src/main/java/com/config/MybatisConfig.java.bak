@@ -1,0 +1,139 @@
+package com.config;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ResourceLoader;
+
+import com.dao.IStudentDao;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
+@org.springframework.context.annotation.Configuration
+public class MybatisConfig2 implements ResourceLoaderAware
+{
+    private ResourceLoader resourceLoader;
+    
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader)
+    {
+        this.resourceLoader = resourceLoader;
+    }
+    
+    @Bean
+    public SqlSessionFactory sqlSessionFactory() throws IOException
+    {
+        InputStream in = resourceLoader.getResource("classpath:/mybatis.xml").getInputStream();
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(in);
+        
+        return sqlSessionFactory;
+    }
+    
+    public static class C3P0DataSourceFactory extends UnpooledDataSourceFactory
+    {
+        
+        public C3P0DataSourceFactory()
+        {
+            this.dataSource = new ComboPooledDataSource();
+        }
+    }
+    
+    
+    
+    public static void main(String[] args)
+    {
+        
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MybatisConfig2.class);
+        
+        SqlSessionFactory sessionFactory = context.getBean(SqlSessionFactory.class);
+        SqlSession session = null;
+        
+        try
+        {
+            session = sessionFactory.openSession();// 不自动提交事务
+            
+            IStudentDao stuDao = session.getMapper(IStudentDao.class); // 通过session
+            
+            
+            
+            
+            
+            /***************************************************/
+            // Page<Student> page = new Page<Student>(0, 2);
+            //
+            // List<Student> stuList = stuDao.findStudentByPage(page, null);
+            // Long totalCount = stuDao.findTotalCount(null);
+            //
+            // page.setPageList(stuList);
+            // page.setMaxCount(totalCount);
+            
+            /***************************************************/
+            //
+            // Page<Student> page = new Page<Student>(1, 5);
+            //
+            // List<Student> stuList = stuDao.findStudentByPage(new
+            // RowBounds(page.getOffset(), page.getPageSize()), null);
+            // Long totalCount = stuDao.findTotalCount(null);
+            
+            // page.setPageList(stuList);
+            // page.setMaxCount(totalCount);
+            
+            /***************************************************/
+            
+            // PageHelper.startPage(2, 5);
+            // com.github.pagehelper.Page<Student> page =
+            // stuDao.findStudentByPage(null);
+            //
+            // Page<Student> pageResult = Page.buildPage(page);
+            //
+            // System.out.println(JSONObject.toJSONString(pageResult, true));
+            /***************************************************/
+            
+            // Student stu = stuDao.findeStudentById("s11");
+            // System.out.println(stu);
+            
+            // Student stu = new Student("s11", "李四 ", 19, true);
+            // stu.setCreateTime(System.currentTimeMillis());
+            // stu.setLastModifyTime(System.currentTimeMillis());
+            // stu.setMyClass(new MyClass("c1"));
+            // stu.setStudentIdCard(new StudentIdCard("card1", "123456"));
+            //
+            // stuDao.addStudent(stu);
+            
+            // stuDao.deleteStudent(stu.getId());
+            
+            // stu.setAge(21);
+            // stu.setMyClass(new MyClass("c2"));
+            // stu.setStudentIdCard(new StudentIdCard("crad2", null));
+            // stuDao.updateStudent(stu);
+            
+            // stuDao.findStudentByPage(page, condition)
+            
+            session.commit();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            if (null != session)
+            {
+                session.rollback();
+            }
+        }
+        finally
+        {
+            if (null != session)
+            {
+                session.close();
+            }
+        }
+        
+        context.close();
+    }
+    
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<configuration>
+
+	<properties resource="jdbc.properties">
+	</properties>
+
+	<dataSource type="POOLED">
+		<property name="driver" value="${jdbc.driverClassName}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</dataSource>
+
+	<mappers>
+		<mapper resource="mapper_user.xml" />
+		<mapper resource="mapper_role.xml" />
+		<!-- 
+		<mapper resource="mapper/mapper_group.xml" />
+		<mapper resource="mapper/mapper_user_group.xml" />
+		 -->
+	</mappers>
+
+</configuration>

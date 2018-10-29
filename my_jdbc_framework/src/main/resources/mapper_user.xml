@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<mapper namespace="com.my.dao.IUserDao">
+
+	<resultMap type="com.my.bean.User" id="userSimpleResultMap">
+		<!-- <id column="pk_user_id" property="id" /> -->
+		<result column="pk_id" property="id" javaType="String"
+			jdbcType="VARCHAR" />
+		<result column="user_name" property="username" javaType="String"
+			jdbcType="VARCHAR" />
+		<result column="password" property="password" javaType="String"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="findUsers" resultMap="userSimpleResultMap">
+		select * from t_user
+	</select>
+
+	<select id="findUserByUsernameAndPassword" resultMap="userSimpleResultMap">
+		select *
+		from t_user u where
+		u.user_name = #{arg0} and u.password = #{arg1}
+	</select>
+
+	<select id="findUserById" resultMap="userSimpleResultMap">
+		SELECT * from t_user u where
+		u.id = #{arg0}
+	</select>
+
+	<insert id="save">
+		insert into t_user (pk_id , password , user_name )
+		values (#{arg0.id} , #{arg0.password} , #{arg0.username} )
+	</insert>
+
+	<update id="udate">
+		update t_user set password = #{arg0.password} ,
+		user_name =
+		#{arg0.username}
+		where id = #{arg0.id}
+	</update>
+
+	<delete id="delete">
+		delete u from t_user u where u.id = #{arg0}
+	</delete>
+
+
+</mapper>

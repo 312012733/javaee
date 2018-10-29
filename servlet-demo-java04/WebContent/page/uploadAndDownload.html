@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+	<!--<link rel="stylesheet" type="text/css" src="./test.css"></link>-->
+	<script type="text/javascript" src="/test/js/lib/jquery-3.3.1.min.js" ></script>
+	<script type="text/javascript" src="/test/js/common/utils.js" ></script>
+	
+	<link href="" rel="stylesheet">
+	
+	<script type="text/javascript">
+	
+		function ajaxUpload (){
+			
+			
+			
+		}
+		
+	</script>
+
+</head>
+<body>
+		
+		<form action="/test/upload" method="post" enctype="multipart/form-data" >
+		
+			姓名：<input type="text" name="stuName" id="stuName" value="张三" /><br>
+			
+			头像1：<input type="file" name="head1" id="head1" multiple="multiple"/><br>
+			头像2：<input type="file" name="head2" id="head2" multiple="multiple" /><br>
+		
+			<input type="submit" value="form提交" /><br>
+		</form>
+		
+		<input type="button" onclick="ajaxUpload()" value="ajax提交" /><br>
+		
+		<a href="/test/download?fileName=head11.png"><img id="head11" src="/test/upload/head11.png"></a>
+		<a href="/test/download?fileName=head12.png"><img id="head12" src="/test/upload/head12.png"></a>
+		<a href="/test/download?fileName=head21.png"><img id="head21" src="/test/upload/head21.png"></a>
+		<a href="/test/download?fileName=head22.png"><img id="head22" src="/test/upload/head22.png"></a>
+	
+</body>
+</html>

@@ -1,0 +1,77 @@
+<html>
+
+ <head>
+	<meta charset="utf-8">
+	<title>新开普 教育</title>
+	
+	<!--<link rel="stylesheet" type="text/css" src="./test.css"></link>-->
+	<script type="text/javascript" src="/test/js/lib/jquery-3.3.1.min.js" ></script>
+	
+	<style> </style>
+	
+	<script>
+	
+		function login()
+		{
+			var username = $("#username").val();
+			var password = $("#password").val();
+			var checkCode = $("#checkcode").val();
+			
+			$.ajax({
+				"url":"/test/user/login",
+				"type":"post",
+// 				"contentType":"application/x-www-form-urlencoded",
+// 				"data":{"username":username,"password":password},//最终形态---》"username="+username+"&password="+password
+				"contentType":"application/json",
+				"data":JSON.stringify({"username":username,"password":password,"checkCode":checkCode}),
+				"async":true,
+				"success":function(result)
+				{
+					alert("恭喜【"+result.username+"】登录成功!");
+					window.location = "/test/page/studentList.html";
+					
+// 					$("body").append("<h1><p>"+result.content.username+"登录成功</p></h1>");
+				},
+				"error":function(result)
+				{
+					alert(JSON.parse(result.responseText).errorMsg);
+				}
+			});
+			
+			
+		}
+	
+		function updateCheckCode(){
+			$("#checkcodeImg").prop("src","/test/user/generateCheckCode;"+Math.random());
+		}
+		
+	</script>
+	
+ </head>
+
+ <body >
+		
+				
+<!-- 		<form action="/test/login" method="POST" enctype="application/x-www-form-urlencoded"> -->
+		
+				用户名：<input id="username" type="text" name="username" value="admin"></input></br>
+
+				密码：<input id="password" type="password" name="password" value="1234"></input></br>
+
+				验证码：<input id="checkcode" type="text" name="checkcode" value=""></input><img  id="checkcodeImg" onclick="updateCheckCode()" style="" class="img2" name="img2" width="80" height="20" src="/test/user/generateCheckCode"></img></br>
+
+				<button id="loginBtn"  onclick="login()">登录</button>
+		
+<!-- 		</form> -->
+			
+
+	
+ </body>
+
+
+<script>
+		
+	
+</script>
+ 
+</html>

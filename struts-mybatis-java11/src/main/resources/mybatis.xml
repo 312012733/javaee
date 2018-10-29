@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+<!-- 	<properties resource="jdbc.properties"> -->
+<!-- 	</properties> -->
+
+	<settings>
+		<setting name="logImpl" value="LOG4J"/>
+		<setting name="cacheEnabled" value="true"/>
+	</settings>
+
+<!-- 	<environments default="my-default"> -->
+
+<!-- 		<environment id="my-default"> -->
+
+<!-- 			<transactionManager type="JDBC"> -->
+<!-- 			</transactionManager> -->
+
+<!-- 			<dataSource type="POOLED"> -->
+<!-- 				<property name="driver" value="${jdbc.driverClassName}" /> -->
+<!-- 				<property name="url" value="${url}" /> -->
+<!-- 				<property name="username" value="${jdbc.username}" /> -->
+<!-- 				<property name="password" value="${jdbc.password}" /> -->
+<!-- 			</dataSource> -->
+
+<!-- 		</environment> -->
+
+
+<!-- 	</environments> -->
+
+<!-- 	<mappers> -->
+<!-- 		<mapper resource="mapper/mapper_userDao.xml" /> -->
+<!-- 		<mapper resource="mapper/mapper_stuDao.xml" /> -->
+<!-- 		<mapper resource="mapper/mapper_student_idcard.xml" /> -->
+<!-- 		<mapper resource="mapper/mapper_class.xml" /> -->
+<!-- 		<mapper resource="mapper/mapper_teacher.xml" /> -->
+<!-- 		<mapper resource="mapper/mapper_stu_teacher.xml" /> -->
+<!-- 	</mappers> -->
+
+</configuration>

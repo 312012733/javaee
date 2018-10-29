@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+
+	<constant name="struts.multipart.saveDir" value="E:\upload"></constant>
+	<!-- <constant name="struts.multipart.maxSize" value="1"></constant> -->
+	<constant name="struts.action.extension" value="action,,do"></constant>
+
+
+	<package name="my-default-pakage" extends="json-default"
+		namespace="/" strict-method-invocation="false">
+
+		<interceptors>
+
+			<interceptor name="timeInterceptor" class="timeInterceptor"></interceptor>
+			<interceptor name="exceptionInterceptor" class="exceptionInterceptor"></interceptor>
+
+			<interceptor-stack name="mYinterceptor-stack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="timeInterceptor"></interceptor-ref>
+				<interceptor-ref name="exceptionInterceptor"></interceptor-ref>
+			</interceptor-stack>
+
+		</interceptors>
+
+	</package>
+
+	<package name="user-package" extends="my-default-pakage"
+		namespace="/" strict-method-invocation="false">
+
+		<action name="user2_*" class="user2Action">
+
+			<interceptor-ref name="mYinterceptor-stack"></interceptor-ref>
+
+			<result name="error" type="redirect">
+				/error.html
+			</result>
+
+			<result name="success" type="dispatcher">
+				/page/main.html
+			</result>
+
+		</action>
+
+		<action name="user_*" class="userAction" method="{1}">
+
+			<interceptor-ref name="mYinterceptor-stack"></interceptor-ref>
+
+			<result name="json_success" type="json">
+				<param name="root"><!-- struts2 预定义的 resultTpye 的实现类的属性 -->
+					responseEntity
+				</param>
+			</result>
+
+		</action>
+
+
+	</package>
+
+	<package name="stu-package" extends="my-default-pakage"
+		namespace="/" strict-method-invocation="false">
+
+
+		<action name="stu_*" class="studentAction" method="{1}">
+			<result name="json_success" type="json">
+				<param name="root">
+					responseEntity
+				</param>
+			</result>
+		</action>
+
+	</package>
+	
+	<package name="class-package" extends="my-default-pakage"
+		namespace="/" strict-method-invocation="false">
+
+
+		<action name="class_*" class="myClassAction" method="{1}">
+			<result name="json_success" type="json">
+				<param name="root">
+					responseEntity
+				</param>
+			</result>
+		</action>
+
+	</package>
+	
+	<package name="teacher-package" extends="my-default-pakage"
+		namespace="/" strict-method-invocation="false">
+
+
+		<action name="teacher_*" class="teacherAction" method="{1}">
+			<result name="json_success" type="json">
+				<param name="root">
+					responseEntity
+				</param>
+			</result>
+		</action>
+
+	</package>
+
+	<package name="upload-download-package" extends="my-default-pakage"
+		namespace="/">
+
+		<action name="upload" class="uploadAndDownloadAction"
+			method="upload">
+
+			<interceptor-ref name="mYinterceptor-stack"></interceptor-ref>
+
+			<result name="input">
+				uploadError.html
+			</result>
+			<result name="success" type="json">
+				<param name="root">
+					responseEntity
+				</param>
+			</result>
+		</action>
+
+		<action name="download" class="uploadAndDownloadAction"
+			method="download">
+
+			<interceptor-ref name="mYinterceptor-stack"></interceptor-ref>
+
+			<result name="success" type="stream">
+				<param name="inputName"> <!-- com.action.UploadAndDownloadAction 中 属性的类型为 InputStream 的 名字 -->
+					inputStreamForDownload
+				</param>
+				<param name="contentDisposition">
+					attachment;fileName=${fileName}
+				</param>
+			</result>
+
+		</action>
+
+	</package>
+
+</struts>
+
+
+
