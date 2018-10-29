@@ -71,7 +71,6 @@ public class SystemTimeCostAspect
             
             LOG.info(proxy + "【" + joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName()
                     + " cost:" + cost + "ms" + "】");
-            
             return result;
         }
         catch (Throwable e)
