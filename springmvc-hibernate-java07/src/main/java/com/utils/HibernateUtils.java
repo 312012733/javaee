@@ -3,6 +3,7 @@ package com.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -98,9 +99,16 @@ public class HibernateUtils
     
     public <T> T find(Class<T> entity, PredicateCallBack predicateCallBack)
     {
-        TypedQuery<T> query = buildQuery(entity, predicateCallBack);
-        
-        return query.getSingleResult();
+        try
+        {
+            TypedQuery<T> query = buildQuery(entity, predicateCallBack);
+            
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            return null;
+        }
     }
     
     public <T> Page<T> findPage(Class<T> entity, Page<T> page, PredicateCallBack predicateCallBack)
